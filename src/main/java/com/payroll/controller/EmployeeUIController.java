@@ -40,15 +40,15 @@ public class EmployeeUIController {
         return "update-employee";
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/update/{id}")
     public String updateEmployee(@PathVariable Long id, @ModelAttribute("employee") Employee employee) {
         service.updateEmployee(id, employee);
         return "redirect:/employees";
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteEmployee(@PathVariable Long id) {
         service.deleteEmployee(id);
-        return "delete-employee";
+        return "redirect:/employees";
     }
 }

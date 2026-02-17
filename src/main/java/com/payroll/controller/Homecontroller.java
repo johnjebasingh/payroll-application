@@ -5,6 +5,6 @@ import org.springframework.stereotype.Controller;
 public class Homecontroller {
     @GetMapping("/")
     public String home(){
-        return "redirect:/employees";
+        return "index";
     }
 }
