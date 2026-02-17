@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payroll Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>`
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f6f8;
+        }
+
+        /* ===== Top Bar ===== */
+        .topbar {
+            background: #96b0d5;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .admin-panel {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-info {
+            text-align: right;
+            font-size: 14px;
+        }
+
+        .profile {
+            width: 40px;
+            height: 40px;
+            background: #161617;
+            border-radius: 50%;
+        }
+
+        /* ===== Top Cards ===== */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background: #6472a0;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            margin: 0 0 10px;
+            font-size: 16px;
+        }
+
+        .card p {
+            font-size: 22px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        /* ===== Main Content ===== */
+        .main {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 20px;
+            padding: 0 20px;
+        }
+
+        /* ===== Table ===== */
+        .table-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #96b0d5;
+        }
+
+        th {
+            background: #96b0d5;
+        }
+
+        /* ===== Quick Actions ===== */
+        .quick-actions {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .quick-actions h3 {
+            margin-top: 0;
+        }
+
+        .quick-actions button {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: #96b0d5;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .quick-actions button:hover {
+            background: #2980b9;
+        }
+
+        /* ===== Chart ===== */
+        .chart-section {
+            margin: 20px;
+            background: #fff;
+            height: 260px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ===== Top Bar ===== -->
+<div class="topbar">
+    <h2>Payroll Dashboard</h2>
+
+    <div class="admin-panel">
+        <div class="admin-info">
+            <strong>Admin</strong><br>
+            <small>Feb 2026</small>
+        </div>
+        <div class="profile"></div>
+    </div>
+</div>
+
+<!-- ===== Top Cards ===== -->
+<div class="cards">
+    <div class="card">
+        <h3>Total Employees</h3>
+        <h2 th:text="${totalEmployees}"></h2>
+    </div>
+    <div class="card">
+        <h3>Total Payroll</h3>
+        <h2 th:text="${thisMonthPayroll}"></h2>
+    </div>
+    <div class="card">
+        <h3>Current Month</h3>
+        <p>February 2026</p>
+    </div>
+</div>
+
+<!-- ===== Main Section ===== -->
+<div class="main">
+
+    <!-- Table -->
+    <div class="table-section">
+        <h3>Employee Payroll Status</h3>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+
+            <tr th:each="emp : ${employees}">
+                <td th:text="${emp.id}"></td>
+                <td th:text="${emp.name}"></td>
+                <td>Pending</td>
+                <td>
+                    <form th:action="@{/api/payroll/generate/{id}(id=${emp.id})}" method="post">
+                        <input type="hidden" name="monthYear" th:value="${currentMonth}">
+                        <button type="submit" >Generate</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h3>Quick Actions</h3>
+        <button onclick="location.href='/employees/new'">Add Employee</button>
+        <button onclick="location.href='/employees/delete'">Delete Employee</button>
+        <button onclick="location.href='/employees'">Search Employee</button>
+        <button>Run Payroll</button>
+        <button onclick="location.href='/payroll/bulk'">Run Bulk Payroll</button>
+    </div>
+
+</div>
+
+<!-- ===== Chart Section ===== -->
+<div class="chart">
+    <h3>Monthly Payroll Expenses</h3>
+    <canvas id="payrollChart"></canvas>
+</div>
+<script th:inline="javascript">
+
+    const labels = [[${months}]];
+    const data = [[${monthlyExpenses}]];
+
+    const ctx = document.getElementById('payrollChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Payroll Expenses',
+                data: data
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

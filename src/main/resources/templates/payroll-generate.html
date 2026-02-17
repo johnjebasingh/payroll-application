@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Generate Payroll</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+        }
+        .card {
+            width: 400px;
+            margin: 80px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .card h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>Generate Payroll</h2>
+
+    <form th:action="@{/payroll/generate/{empId}(empId=${selectedEmpId})}"
+          method="post">
+
+        <!-- Employee -->
+        <label>Employee</label>
+        <select name="empId" id="empSelect" required>
+            <option value="">-- Select Employee --</option>
+            <option th:each="emp : ${employees}"
+                    th:value="${emp.id}"
+                    th:text="${emp.name}">
+            </option>
+        </select>
+
+        <!-- Month -->
+        <label>Month</label>
+        <input type="month" name="monthYear"
+               th:value="${currentMonth}" required />
+
+        <!-- Hidden path variable holder -->
+        <input type="hidden" id="selectedEmpId" name="selectedEmpId"/>
+
+        <button type="submit">Generate Payroll</button>
+    </form>
+</div>
+
+<script>
+    const empSelect = document.getElementById("empSelect");
+    const hiddenEmp = document.getElementById("selectedEmpId");
+
+    empSelect.addEventListener("change", function () {
+        hiddenEmp.value = this.value;
+    });
+</script>
+
+</body>
+</html>

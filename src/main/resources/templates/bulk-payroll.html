@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bulk Payroll</title>
+    <link rel="stylesheet" th:href="@{/css/payroll.css}">
+</head>
+<body>
+
+<div class="container">
+    <h2>📊 Bulk Payroll Generation</h2>
+
+    <!-- BULK PAYROLL FORM -->
+    <form th:action="@{/payroll/bulk/run}" method="post" class="form-box">
+
+        <label for="monthYear">Select Month</label>
+        <input type="month" id="monthYear" name="monthYear" required>
+
+        <button type="submit">Generate Payroll</button>
+    </form>
+
+</div>
+
+</body>
+</html>

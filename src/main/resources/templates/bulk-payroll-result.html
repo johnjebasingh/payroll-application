@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bulk Payroll Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            padding: 30px;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 1000px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        .summary {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #222;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .back-btn {
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
+            background: #007bff;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+        }
+
+        .back-btn:hover {
+            background: #0056b3;
+        }
+
+        .empty {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h2>✅ Bulk Payroll Completed</h2>
+
+    <div class="summary">
+        <p><strong>Month:</strong> <span th:text="${monthYear}"></span></p>
+        <p><strong>Employees Processed:</strong> <span th:text="${count}"></span></p>
+    </div>
+
+    <!-- WHEN NO PAYROLL GENERATED -->
+    <div th:if="${payrolls == null or #lists.isEmpty(payrolls)}" class="empty">
+        No new payroll records were generated.
+    </div>
+
+    <!-- PAYROLL TABLE -->
+    <table th:if="${payrolls != null and !#lists.isEmpty(payrolls)}">
+        <thead>
+        <tr>
+            <th>Payroll ID</th>
+            <th>Employee ID</th>
+            <th>Month</th>
+            <th>Earned Salary</th>
+            <th>OT Amount</th>
+            <th>Additional Earnings</th>
+            <th>Deductions</th>
+            <th>Net Salary</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${payrolls}">
+            <td th:text="${p.payrollid}"></td>
+            <td th:text="${p.employee.id}"></td>
+            <td th:text="${p.monthYear}"></td>
+            <td th:text="${p.earnedSalary}"></td>
+            <td th:text="${p.otAmount}"></td>
+            <td th:text="${p.additionalEarnings}"></td>
+            <td th:text="${p.deductions}"></td>
+            <td th:text="${p.netSalary}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/payroll/bulk}" class="back-btn">⬅ Back</a>
+
+</div>
+
+</body>
+</html>
