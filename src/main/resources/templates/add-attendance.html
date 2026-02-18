@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Attendance</title>
+</head>
+<body>
+
+<h2>Add Attendance</h2>
+
+<form th:action="@{/attendance/save}" method="post">
+
+    <label>Employee:</label>
+    <select name="empId">
+        <option th:each="emp : ${employees}"
+                th:value="${emp.id}"
+                th:text="${emp.name}">
+        </option>
+    </select>
+
+    <br><br>
+
+    <label>Month:</label>
+    <input type="text" name="monthYear" placeholder="2025-02" required/>
+
+    <br><br>
+
+    <label>Present Days:</label>
+    <input type="number" name="presentDays" required/>
+
+    <br><br>
+
+    <label>OT Hours:</label>
+    <input type="number" name="otHours"/>
+
+    <br><br>
+
+    <button type="submit">Save</button>
+
+</form>
+
+</body>
+</html>

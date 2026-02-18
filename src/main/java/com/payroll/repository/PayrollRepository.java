@@ -1,5 +1,6 @@
 package com.payroll.repository;
 
+import com.payroll.entity.Employee;
 import com.payroll.entity.Payroll;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ public interface PayrollRepository extends JpaRepository<Payroll, Long> {
     boolean existsByEmployee_IdAndMonthYear(Long empId, String monthYear);
 
     // Get payroll for single employee & month
-    Optional<Payroll>  findByEmployee_IdAndMonthYear(Long empId, String monthYear);
+    Optional<Payroll>  findByEmployeeAndMonthYear(Employee employee, String monthYear);
 
     // List payrolls by month (reports / UI)
     List<Payroll> findByMonthYear(String monthYear);

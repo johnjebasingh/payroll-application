@@ -48,7 +48,7 @@ public class PayrollServiceImpl implements PayrollService {
 
         // 3️⃣ Get attendance
         Attendance attendance = attendanceRepository
-                .findByEmployee_IdAndMonthYear(empId, monthYear)
+                .findByEmployeeAndMonthYear(employee, monthYear)
                 .orElseThrow(() -> {
                     System.out.println("DEBUG: Attendance missing for empId=" + empId + " month=" + monthYear);
                     return new RuntimeException("Attendance not found");
@@ -94,7 +94,7 @@ public class PayrollServiceImpl implements PayrollService {
             }
 
             Optional<Attendance> attendanceOpt =
-                    attendanceRepository. findByEmployee_IdAndMonthYear(empId, monthYear);
+                    attendanceRepository. findByEmployeeAndMonthYear(employee, monthYear);
 
             if (attendanceOpt.isEmpty()) {
                 continue;

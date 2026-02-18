@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Attendance</title>
+</head>
+<body>
+
+<h2>Attendance Details</h2>
+
+<table border="1">
+    <tr>
+        <th>Month</th>
+        <th>Present Days</th>
+        <th>OT Hours</th>
+    </tr>
+
+    <tr th:each="att : ${attendanceList}">
+        <td th:text="${att.monthYear}"></td>
+        <td th:text="${att.presentDays}"></td>
+        <td th:text="${att.otHours}"></td>
+    </tr>
+
+</table>
+
+</body>
+</html>
